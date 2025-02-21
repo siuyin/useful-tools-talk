@@ -1,0 +1,41 @@
+# Useful tools
+Tools I've used with Go to build software
+21 Feb 2025
+
+Loh Siu Yin
+Technology Consultant, Beyond Broadcast LLP
+siuyin@beyondbroadcast.com
+
+## Tool categories
+Programming Language: `Go` https://go.dev/
+
+Serialization and persistence: eg. JSON, boltDB
+
+Communications / transport: eg http, NATS
+
+## Programming
+`go` Hello World
+
+.play -edit -numbers cmd/hello/main.go
+
+`fmt` is the `go` standard library formatted output package.
+
+Identifiers starting with an Uppercase character are public or "exported" functions.
+
+## Adding Serialization and Deserialization
+.code -numbers cmd/gob/main.go /^type Person/,/^}/
+.play -edit -numbers cmd/gob/main.go /^func main/,/^}/
+
+Let's try reading only.
+
+## Writing GOBs
+.code -numbers cmd/gob/main.go /^func writeGOB/,/^}/
+## Reading GOBs
+.code -numbers cmd/gob/main.go /^func readGOB/,/^}/
+
+
+## Key Value store
+.code -numbers cmd/kv/main.go /^func main/,/^}/
+.code -numbers cmd/kv/main.go /^func putData/,/^}/
+
+demo: go run cmd/gob/main.go
