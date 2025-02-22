@@ -11,6 +11,7 @@ import (
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
+	"github.com/siuyin/dflt"
 )
 
 type Person struct {
@@ -36,6 +37,7 @@ func main() {
 
 	person := get(kv, "KitSiew")
 	fmt.Println(person.Name)
+	select {}
 }
 
 func putData(kv jetstream.KeyValue) {
@@ -46,19 +48,23 @@ func putData(kv jetstream.KeyValue) {
 }
 
 func runServer() (*nats.Conn, *server.Server) {
-	opts := &server.Options{JetStream: true, StoreDir: "/tmp/mystore"}
+	opts := &server.Options{JetStream: true,
+		DontListen: false,
+		StoreDir:   "/tmp/mystore"}
 	ns, err := server.NewServer(opts)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// ns.ConfigureLogger()
+	if dflt.EnvString("LOGGING", "") != "" {
+		ns.ConfigureLogger()
+	}
 	go ns.Start()
 	if !ns.ReadyForConnections(5 * time.Second) {
 		log.Fatal("could not bring up embedded NATS server")
 	}
 
-	nc, err := nats.Connect(ns.ClientURL())
+	nc, err := nats.Connect(ns.ClientURL(), nats.InProcessServer(ns))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,7 +88,6 @@ func newKeyValueStore() jetstream.KeyValue {
 }
 
 func shutdownKeyValueStore() {
-	ns.Shutdown()
 	ns.WaitForShutdown()
 }
 

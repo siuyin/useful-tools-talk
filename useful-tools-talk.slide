@@ -38,4 +38,29 @@ Let's try reading only.
 .code -numbers cmd/kv/main.go /^func main/,/^}/
 .code -numbers cmd/kv/main.go /^func putData/,/^}/
 
-demo: go run cmd/gob/main.go
+demo: go run cmd/kv/main.go
+
+## Embedded NATS Server
+- Core NATS: fire and forget 
+  - Publish / Subscribe
+  - Request / Reply
+  - Queue Groups (load balancing)
+
+- JetStream: at least once or exactly once delivery (within time window)
+  - Streams
+  - Key Value Stores
+  - Object Stores
+
+
+## chromem-go : Embedded Vector Database
+Vector search powers Retrieval Augmented Generation (RAG).
+
+RAG provides relevant factual context to Large Language Models to minimise hallucination
+when they generate content.
+
+Demo dependencies:
+- ollama : install ollama : https://ollama.com/download
+- embedding model: `ollama pull nomic-embed-text`
+
+Optional local LLM with gemma2 (2 billion parameter model):
+- `ollama pull gemma2:2b`

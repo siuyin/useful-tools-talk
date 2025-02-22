@@ -5,6 +5,8 @@ go 1.22.1
 require (
 	github.com/nats-io/nats-server/v2 v2.10.25
 	github.com/nats-io/nats.go v1.39.1
+	github.com/philippgille/chromem-go v0.7.0
+	github.com/siuyin/dflt v0.0.0-20230329062002-0475f4d54412
 )
 
 require (
