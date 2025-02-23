@@ -30,7 +30,8 @@ func init() {}
 
 func main() {
 	coll := loadOrCreateFoodDB()
-	for q := getQuery(); q != "quit"; q = getQuery() {
+	for {
+		q := getQuery()
 		showMatchingDocs(coll, q)
 	}
 }
@@ -101,7 +102,7 @@ func loadDataCSV(coll *chromem.Collection) *chromem.Collection {
 		e := Entry{ID: recs[i][0], Title: recs[i][1], Content: recs[i][2]}
 		d := chromem.Document{
 			ID:      e.ID,
-			Content: searchDocPrefix + "\ndocument id: " + e.ID + "\n" + e.Title + "\n" + e.Content +"\n"}
+			Content: searchDocPrefix + "\ndocument id: " + e.ID + "\n" + e.Title + "\n" + e.Content + "\n"}
 		if err := coll.AddDocument(context.Background(), d); err != nil {
 			log.Fatal(err)
 		}
