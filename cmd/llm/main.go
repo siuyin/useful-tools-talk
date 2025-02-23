@@ -10,6 +10,9 @@ import (
 	"github.com/ollama/ollama/api"
 )
 
+const llmModel = "gemma2:2b"
+// const llmModel = "deepseek-r1:1.5b"
+
 func main() {
 	client, err := api.ClientFromEnvironment()
 	if err != nil {
@@ -27,11 +30,10 @@ func main() {
 		fmt.Print(resp.Response)
 		return nil
 	}
-
 	for {
 		// By default, GenerateRequest is streaming.
 		req := &api.GenerateRequest{
-			Model:  "gemma2:2b",
+			Model:  llmModel,
 			Prompt: getQuery(),
 		}
 
@@ -41,8 +43,9 @@ func main() {
 		fmt.Println()
 	}
 }
+
 func getQuery() string {
-	fmt.Println("\n\n\nEnter your question:")
+	fmt.Printf("\n\n\nEnter your question below for %s :\n", llmModel)
 	r := bufio.NewReader(os.Stdin)
 	q, err := r.ReadString('\n')
 	if err != nil {

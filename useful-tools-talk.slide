@@ -1,5 +1,5 @@
-# Useful tools
-Tools I've used with Go to build software
+# Local-first computing with Go
+Tools I've used with Go to build software that runs locally.
 21 Feb 2025
 
 Loh Siu Yin
@@ -51,6 +51,12 @@ demo: go run cmd/kv/main.go
   - Key Value Stores
   - Object Stores
 
+## ollama : local-first AI Models
+
+ollama https://github.com/ollama/ollama enables running Large Language Models locally.
+
+demo with ollama and gemma2 (2 billon parameter model):
+go run cmd/llm/main.go
 
 ## chromem-go : Embedded Vector Database
 Vector search powers Retrieval Augmented Generation (RAG).

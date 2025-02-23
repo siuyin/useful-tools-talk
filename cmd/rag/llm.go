@@ -33,12 +33,14 @@ func rag(md []chromem.Result, q string) {
 %s
 	`, relevantDocs(md), question)
 
+	// const llmModel = "gemma2:2b"
+	const llmModel = "deepseek-r1:1.5b"
 	req := &api.GenerateRequest{
-		Model:  "gemma2:2b",
+		Model:  llmModel,
 		Prompt: prompt,
 	}
 	fmt.Println(prompt)
-	fmt.Println("Asking gemma2:2b on a local machine without a GPU. This will take a minute...")
+	fmt.Println("Asking " + llmModel +" on a local machine without a GPU. This will take a minute...")
 
 	ctx := context.Background()
 	if err := client.Generate(ctx, req, respFunc); err != nil {
