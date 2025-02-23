@@ -32,7 +32,8 @@ func main() {
 	coll := loadOrCreateFoodDB()
 	for {
 		q := getQuery()
-		showMatchingDocs(coll, q)
+		md := showMatchingDocs(coll, q)
+		rag(md, q)
 	}
 }
 
@@ -57,6 +58,8 @@ func loadOrCreateFoodDB() *chromem.Collection {
 	return coll
 }
 
+const searchQueryPrefix = "search_query: "
+
 func getQuery() string {
 	fmt.Println("\n\n\nEnter your question:")
 	r := bufio.NewReader(os.Stdin)
@@ -65,13 +68,13 @@ func getQuery() string {
 		log.Fatal(err)
 	}
 
-	return "seach_query: " + q
+	return searchQueryPrefix + q
 }
 
 const searchDocPrefix = "search_document: "
 
-func showMatchingDocs(coll *chromem.Collection, q string) {
-	const numRes = 2
+func showMatchingDocs(coll *chromem.Collection, q string) []chromem.Result {
+	const numRes = 3
 	res, err := coll.Query(context.Background(), q, numRes, nil, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -81,6 +84,8 @@ func showMatchingDocs(coll *chromem.Collection, q string) {
 		fmt.Printf("\nDocument %d (similarity: %.3f): %s\n",
 			i+1, r.Similarity, strings.TrimPrefix(r.Content, searchDocPrefix))
 	}
+
+	return res
 }
 
 func loadDataCSV(coll *chromem.Collection) *chromem.Collection {
