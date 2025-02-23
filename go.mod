@@ -1,10 +1,13 @@
 module github.com/siuyin/useful-tools-talk
 
-go 1.22.1
+go 1.23.4
+
+toolchain go1.23.6
 
 require (
 	github.com/nats-io/nats-server/v2 v2.10.25
 	github.com/nats-io/nats.go v1.39.1
+	github.com/ollama/ollama v0.5.12
 	github.com/philippgille/chromem-go v0.7.0
 	github.com/sashabaranov/go-openai v1.37.0
 	github.com/siuyin/dflt v0.0.0-20230329062002-0475f4d54412
