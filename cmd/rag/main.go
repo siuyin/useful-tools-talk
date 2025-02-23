@@ -7,13 +7,12 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"runtime"
 	"strings"
 
 	"github.com/philippgille/chromem-go"
 )
 
-type FoodListing struct {
+type Entry struct {
 	ID      string
 	Title   string
 	Content string
@@ -52,11 +51,14 @@ func loadOrCreateFoodDB() *chromem.Collection {
 		return coll
 	}
 
-	fl := loadFoodListingCSV()
+	fl := loadDataCSV()
 	docs := createDocs(fl)
 	log.Println("docs created")
-	if err := coll.AddDocuments(context.Background(), docs, runtime.NumCPU()); err != nil {
-		log.Fatal(err)
+	for _, d := range docs {
+		if err := coll.AddDocument(context.Background(), d); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("%s: %s\n", d.ID, d.Content)
 	}
 	log.Println("collection created")
 	return coll
@@ -88,8 +90,8 @@ func showMatchingDocs(coll *chromem.Collection, q string) {
 	}
 }
 
-func loadFoodListingCSV() []FoodListing {
-	f, err := os.Open("./fooddat.csv")
+func loadDataCSV() []Entry {
+	f, err := os.Open("./dat.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -99,13 +101,13 @@ func loadFoodListingCSV() []FoodListing {
 		log.Fatal(err)
 	}
 
-	var list []FoodListing
+	var list []Entry
 	if len(recs) < 2 {
 		return list
 	}
 
 	for i := 1; i < len(recs); i++ {
-		fl := FoodListing{ID: recs[i][0], Title: recs[i][1], Content: recs[i][2]}
+		fl := Entry{ID: recs[i][0], Title: recs[i][1], Content: recs[i][2]}
 		fmt.Printf("%s: %s\n", fl.ID, fl.Title)
 		list = append(list, fl)
 	}
@@ -113,20 +115,16 @@ func loadFoodListingCSV() []FoodListing {
 	return list
 }
 
-func createDocs(fl []FoodListing) []chromem.Document {
+func createDocs(fl []Entry) []chromem.Document {
 	var docs []chromem.Document
 	if len(fl) < 2 {
 		return docs
 	}
 
 	for _, f := range fl {
-		if f.ID == "13" {
-			fmt.Printf("%v\n", f)
-		}
-
 		d := chromem.Document{
 			ID:      f.ID,
-			Content: searchDocPrefix + " id: " + f.ID + " title: " + f.Title + " content: " + f.Content}
+			Content: searchDocPrefix + " (document id: " + f.ID + ") " + f.Title + " " + f.Content}
 		docs = append(docs, d)
 	}
 
