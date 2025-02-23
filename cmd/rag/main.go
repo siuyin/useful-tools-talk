@@ -19,9 +19,7 @@ type Entry struct {
 	Content string
 }
 
-const (
-	embeddingModel = "nomic-embed-text"
-)
+const embeddingModel = "nomic-embed-text"
 
 var (
 	db *chromem.DB
@@ -30,7 +28,7 @@ var (
 func init() {}
 
 func main() {
-	coll := loadOrCreateFoodDB()
+	coll := loadOrCreateVecDB()
 	for {
 		q := getQuery()
 		md := showMatchingDocs(coll, q)
@@ -38,7 +36,7 @@ func main() {
 	}
 }
 
-func loadOrCreateFoodDB() *chromem.Collection {
+func loadOrCreateVecDB() *chromem.Collection {
 	var err error
 	const compress = false
 	db, err = chromem.NewPersistentDB(dflt.EnvString("VECTORDB", "/tmp/vecdb"), compress)
@@ -46,7 +44,8 @@ func loadOrCreateFoodDB() *chromem.Collection {
 		log.Fatal(err)
 	}
 
-	coll, err := db.GetOrCreateCollection("food", nil, chromem.NewEmbeddingFuncOllama(embeddingModel, ""))
+	coll, err := db.GetOrCreateCollection("knowledge", nil,
+		chromem.NewEmbeddingFuncOllama(embeddingModel, ""))
 	if err != nil {
 		log.Fatal(err)
 	}
