@@ -26,22 +26,25 @@ func rag(md []chromem.Result, q string) {
 	systemPrompt := fmt.Sprintf(`You are a helpful research assistant tasked with answering questions
 	relating to knowlege bases you have access to.
 	
-	Answer the question in a factual manner based on your research findings below:
-	%s
+	Answer the question in a factual manner strictly based only on your research findings below:
+%s
+	Do not extrapolate. If the data is not available, respond with "I don't know".
 	`, relevantDocs(md))
 
+	question := "Question: " + strings.TrimPrefix(q, "search_query: ")
 	msgs := []openai.ChatCompletionMessage{
 		{
 			Role:    openai.ChatMessageRoleSystem,
 			Content: systemPrompt,
 		}, {
 			Role:    openai.ChatMessageRoleUser,
-			Content: "Question: " + strings.TrimPrefix(q, "search_query: "),
+			Content: question,
 		},
 	}
 
 	fmt.Println(systemPrompt)
 	fmt.Println("Asking gemma2:2b on a local machine without a GPU. This will take a minute...")
+	fmt.Println(question)
 
 	ctx := context.Background()
 	res, err := aiClient.CreateChatCompletion(ctx, openai.ChatCompletionRequest{

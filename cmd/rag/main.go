@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/philippgille/chromem-go"
+	"github.com/siuyin/dflt"
 )
 
 type Entry struct {
@@ -39,8 +40,8 @@ func main() {
 
 func loadOrCreateFoodDB() *chromem.Collection {
 	var err error
-	compress := false
-	db, err = chromem.NewPersistentDB("/tmp/vecdb", compress)
+	const compress = false
+	db, err = chromem.NewPersistentDB(dflt.EnvString("VECTORDB", "/tmp/vecdb"), compress)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -53,7 +54,7 @@ func loadOrCreateFoodDB() *chromem.Collection {
 		return coll
 	}
 
-	coll = loadDataCSV(coll)
+	coll = loadCSVData(coll)
 	log.Println("collection created")
 	return coll
 }
@@ -88,7 +89,7 @@ func showMatchingDocs(coll *chromem.Collection, q string) []chromem.Result {
 	return res
 }
 
-func loadDataCSV(coll *chromem.Collection) *chromem.Collection {
+func loadCSVData(coll *chromem.Collection) *chromem.Collection {
 	f, err := os.Open("./dat.csv")
 	if err != nil {
 		log.Fatal(err)

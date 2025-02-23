@@ -64,3 +64,5 @@ Demo dependencies:
 
 Optional local LLM with gemma2 (2 billion parameter model):
 - `ollama pull gemma2:2b`
+
+demo: go run cmd/rag/*.go
