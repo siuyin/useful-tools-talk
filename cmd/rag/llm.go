@@ -4,11 +4,10 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net/http"
 	"strings"
 
+	"github.com/ollama/ollama/api"
 	"github.com/philippgille/chromem-go"
-	"github.com/sashabaranov/go-openai"
 )
 
 const (
@@ -18,44 +17,34 @@ const (
 
 func rag(md []chromem.Result, q string) {
 
-	aiClient := openai.NewClientWithConfig(openai.ClientConfig{
-		BaseURL:    ollamaBaseURL,
-		HTTPClient: http.DefaultClient,
-	})
+	client, err := api.ClientFromEnvironment()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	systemPrompt := fmt.Sprintf(`You are a helpful research assistant tasked with answering questions
+	question := "Question: " + strings.TrimPrefix(q, "search_query: ")
+	prompt := fmt.Sprintf(`You are a helpful research assistant tasked with answering questions
 	relating to knowlege bases you have access to.
 	
 	Answer the question in a factual manner strictly based only on your research findings below:
 %s
 	Do not extrapolate. If the data is not available, respond with "I don't know".
-	`, relevantDocs(md))
+	
+%s
+	`, relevantDocs(md), question)
 
-	question := "Question: " + strings.TrimPrefix(q, "search_query: ")
-	msgs := []openai.ChatCompletionMessage{
-		{
-			Role:    openai.ChatMessageRoleSystem,
-			Content: systemPrompt,
-		}, {
-			Role:    openai.ChatMessageRoleUser,
-			Content: question,
-		},
+	req := &api.GenerateRequest{
+		Model:  "gemma2:2b",
+		Prompt: prompt,
 	}
-
-	fmt.Println(systemPrompt)
+	fmt.Println(prompt)
 	fmt.Println("Asking gemma2:2b on a local machine without a GPU. This will take a minute...")
-	fmt.Println(question)
 
 	ctx := context.Background()
-	res, err := aiClient.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model:    llmModel,
-		Messages: msgs,
-	})
-	if err != nil {
+	if err := client.Generate(ctx, req, respFunc); err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println(strings.TrimSpace(res.Choices[0].Message.Content))
+	fmt.Println()
 }
 
 func relevantDocs(md []chromem.Result) string {
@@ -66,4 +55,9 @@ func relevantDocs(md []chromem.Result) string {
 		}
 	}
 	return docs
+}
+
+func respFunc(resp api.GenerateResponse) error {
+	fmt.Print(resp.Response)
+	return nil
 }
