@@ -51,15 +51,7 @@ func loadOrCreateFoodDB() *chromem.Collection {
 		return coll
 	}
 
-	fl := loadDataCSV()
-	docs := createDocs(fl)
-	log.Println("docs created")
-	for _, d := range docs {
-		if err := coll.AddDocument(context.Background(), d); err != nil {
-			log.Fatal(err)
-		}
-		fmt.Printf("%s: %s\n", d.ID, d.Content)
-	}
+	coll = loadDataCSV(coll)
 	log.Println("collection created")
 	return coll
 }
@@ -90,7 +82,7 @@ func showMatchingDocs(coll *chromem.Collection, q string) {
 	}
 }
 
-func loadDataCSV() []Entry {
+func loadDataCSV(coll *chromem.Collection) *chromem.Collection {
 	f, err := os.Open("./dat.csv")
 	if err != nil {
 		log.Fatal(err)
@@ -101,32 +93,20 @@ func loadDataCSV() []Entry {
 		log.Fatal(err)
 	}
 
-	var list []Entry
 	if len(recs) < 2 {
-		return list
+		return coll
 	}
 
 	for i := 1; i < len(recs); i++ {
-		fl := Entry{ID: recs[i][0], Title: recs[i][1], Content: recs[i][2]}
-		fmt.Printf("%s: %s\n", fl.ID, fl.Title)
-		list = append(list, fl)
-	}
-
-	return list
-}
-
-func createDocs(fl []Entry) []chromem.Document {
-	var docs []chromem.Document
-	if len(fl) < 2 {
-		return docs
-	}
-
-	for _, f := range fl {
+		e := Entry{ID: recs[i][0], Title: recs[i][1], Content: recs[i][2]}
 		d := chromem.Document{
-			ID:      f.ID,
-			Content: searchDocPrefix + " (document id: " + f.ID + ") " + f.Title + " " + f.Content}
-		docs = append(docs, d)
+			ID:      e.ID,
+			Content: searchDocPrefix + "\ndocument id: " + e.ID + "\n" + e.Title + "\n" + e.Content +"\n"}
+		if err := coll.AddDocument(context.Background(), d); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("%s: %s\n", d.ID, d.Content)
 	}
+	return coll
 
-	return docs
 }
