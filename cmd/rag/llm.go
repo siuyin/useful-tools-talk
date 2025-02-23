@@ -33,8 +33,8 @@ func rag(md []chromem.Result, q string) {
 %s
 	`, relevantDocs(md), question)
 
-	// const llmModel = "gemma2:2b"
-	const llmModel = "deepseek-r1:1.5b"
+	const llmModel = "gemma2:2b"
+	// const llmModel = "deepseek-r1:1.5b"
 	req := &api.GenerateRequest{
 		Model:  llmModel,
 		Prompt: prompt,
