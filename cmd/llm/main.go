@@ -20,18 +20,8 @@ func main() {
 	}
 
 	ctx := context.Background()
-	respFunc := func(resp api.GenerateResponse) error {
-		// Only print the response here; GenerateResponse has a number of other
-		// interesting fields you want to examine.
-
-		// In streaming mode, responses are partial so we call fmt.Print (and not
-		// Println) in order to avoid spurious newlines being introduced. The
-		// model will insert its own newlines if it wants.
-		fmt.Print(resp.Response)
-		return nil
-	}
 	for {
-		// By default, GenerateRequest is streaming.
+		// GenerateRequest streams via respFunc.
 		req := &api.GenerateRequest{
 			Model:  llmModel,
 			Prompt: getQuery(),
@@ -53,4 +43,8 @@ func getQuery() string {
 	}
 
 	return q
+}
+func respFunc(res api.GenerateResponse) error {
+	fmt.Print(res.Response)
+	return nil
 }

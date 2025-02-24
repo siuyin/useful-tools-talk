@@ -20,3 +20,8 @@ SQL databases: sqlite, Postgres and MariaDB.
 NATS https://pkg.go.dev/github.com/nats-io/nats-server/v2@v2.10.25/server provides an embeddable messaging system with pub-sub, request-reply, work queues, streams, key-value and object stores.
 
 MQTT https://mqtt.org/ provides a lightweight messaging system for internet of things applications.
+
+## Vector Databases, RAG and LLMs
+chromem-go https://github.com/philippgille/chromem-go vector database with bindings to ollama
+
+ollama https://ollama.com/ allows running LLMs locally.

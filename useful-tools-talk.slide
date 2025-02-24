@@ -52,11 +52,23 @@ demo: go run cmd/kv/main.go
   - Object Stores
 
 ## ollama : local-first AI Models
-
 ollama https://github.com/ollama/ollama enables running Large Language Models locally.
 
-demo with ollama and gemma2 (2 billon parameter model):
-go run cmd/llm/main.go
+.code -numbers cmd/llm/main.go /func main/,/^}/
+
+## respFunc and getQuery functions
+.code -numbers cmd/llm/main.go /func respFunc/,/^}/
+.code -numbers cmd/llm/main.go /func getQuery/,/^}/
+.code -numbers cmd/llm/main.go /^const llmModel/,/$/
+
+## demo: running an LLM locally
+Demo dependencies:
+- ollama : install ollama : https://ollama.com/download
+- Large Language Model: `ollama pull gemma2:2b` 
+
+Also try out `deepseek-r1:1.5b`
+
+demo: go run cmd/llm/*.go
 
 ## chromem-go : Embedded Vector Database
 Vector search powers Retrieval Augmented Generation (RAG).
@@ -68,7 +80,7 @@ Demo dependencies:
 - ollama : install ollama : https://ollama.com/download
 - embedding model: `ollama pull nomic-embed-text`
 
-Optional local LLM with gemma2 (2 billion parameter model):
+local LLM with gemma2 (2 billion parameter model):
 - `ollama pull gemma2:2b`
 
 demo: go run cmd/rag/*.go
