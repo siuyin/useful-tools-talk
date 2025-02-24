@@ -39,6 +39,7 @@ func rag(md []chromem.Result, q string) {
 		Model:  llmModel,
 		Prompt: prompt,
 	}
+	fmt.Println("------------------------")
 	fmt.Println(prompt)
 	fmt.Println("Asking " + llmModel +" on a local machine without a GPU. This will take a minute...")
 
