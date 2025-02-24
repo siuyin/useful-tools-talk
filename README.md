@@ -1,5 +1,5 @@
 # Useful tools
-I have found the follows tools have helped me the most in my software engineering practice.
+The following tools have helped me build useful software.
 
 ## Language
 `Go` https://go.dev/ is an easy to learn, yet very capable language suitable for building backend services.
