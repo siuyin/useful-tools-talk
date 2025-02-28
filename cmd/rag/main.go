@@ -25,7 +25,6 @@ var (
 	db *chromem.DB
 )
 
-func init() {}
 
 func main() {
 	coll := loadOrCreateVecDB()

@@ -8,10 +8,16 @@ import (
 	"os"
 
 	"github.com/ollama/ollama/api"
+	"github.com/siuyin/dflt"
 )
 
-const llmModel = "gemma2:2b"
+// const llmModel = "gemma2:2b"
 // const llmModel = "deepseek-r1:1.5b"
+var llmModel string
+
+func init() {
+	llmModel = dflt.EnvString("MODEL", "gemma2:2b")
+}
 
 func main() {
 	client, err := api.ClientFromEnvironment()

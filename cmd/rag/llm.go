@@ -8,12 +8,19 @@ import (
 
 	"github.com/ollama/ollama/api"
 	"github.com/philippgille/chromem-go"
+	"github.com/siuyin/dflt"
 )
 
 const (
 	ollamaBaseURL = "http://localhost:11434/v1"
-	llmModel      = "gemma2:2b"
+	// llmModel      = "gemma2:2b"
 )
+
+var llmModel string
+
+func init() {
+	llmModel = dflt.EnvString("MODEL", "gemma2:2b")
+}
 
 func rag(md []chromem.Result, q string) {
 
@@ -33,15 +40,13 @@ func rag(md []chromem.Result, q string) {
 %s
 	`, relevantDocs(md), question)
 
-	const llmModel = "gemma2:2b"
-	// const llmModel = "deepseek-r1:1.5b"
 	req := &api.GenerateRequest{
 		Model:  llmModel,
 		Prompt: prompt,
 	}
 	fmt.Println("------------------------")
 	fmt.Println(prompt)
-	fmt.Println("Asking " + llmModel +" on a local machine without a GPU. This will take a minute...")
+	fmt.Println("Asking " + llmModel + " on a local machine without a GPU. This will take a minute...")
 
 	ctx := context.Background()
 	if err := client.Generate(ctx, req, respFunc); err != nil {
