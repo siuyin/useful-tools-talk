@@ -59,7 +59,7 @@ ollama https://github.com/ollama/ollama enables running Large Language Models lo
 ## respFunc and getQuery functions
 .code -numbers cmd/llm/main.go /func respFunc/,/^}/
 .code -numbers cmd/llm/main.go /func getQuery/,/^}/
-.code -numbers cmd/llm/main.go /^const llmModel/,/$/
+.code -numbers cmd/llm/main.go /^func init/,/^}/
 
 ## demo: running an LLM locally
 Demo dependencies:
